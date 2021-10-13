@@ -27,7 +27,9 @@ router.post('/friends', (req, res) => __awaiter(void 0, void 0, void 0, function
             res.json({ success: false, error: 'User not found' }).status(404);
         }
     }
-    finally {
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'An error has occurred' }).status(400);
     }
 }));
 module.exports = router;

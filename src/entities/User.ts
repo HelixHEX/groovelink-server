@@ -4,10 +4,16 @@ import {
     CreateDateColumn,
     Entity,
     PrimaryGeneratedColumn,
-    // OneToMany,
     ManyToMany,
     JoinTable,
 } from "typeorm";
+import Playlist from "./Playlist";
+
+type song = {
+    name: string;
+    artist: string;
+    duration: string;
+  };
 
 @Entity()
 export default class User extends BaseEntity {
@@ -18,13 +24,13 @@ export default class User extends BaseEntity {
     @CreateDateColumn()
     createdAt: Date;
     
-    @Column('text', {nullable: true, default: 'test'})
+    @Column('text', {nullable: true})
     name: string | null;
 
-    @Column('text', {nullable: true, default: 'test'})
+    @Column('text', {nullable: true})
     email: string | null;
 
-    @Column('text', {nullable: true, default: 'test'})
+    @Column('text', {nullable: true})
     picture: string | null;
 
     @Column()
@@ -33,4 +39,11 @@ export default class User extends BaseEntity {
     @ManyToMany(() => User, user => user.friends)
     @JoinTable()
     friends: User[]
+
+    @ManyToMany(() => Playlist, playlist => playlist.users)
+    @JoinTable()
+    playlists: Playlist[]
+
+    @Column("jsonb", { nullable: true, default: [] })
+    highlightedsongs: song[];
 }

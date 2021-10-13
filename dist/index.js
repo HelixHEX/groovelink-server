@@ -20,6 +20,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const typeorm_1 = require("typeorm");
 const user = require('./routes/user');
 const music = require('./routes/music');
+const middleware_1 = require("./utils/middleware");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     yield (0, typeorm_1.createConnection)();
@@ -30,6 +31,11 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     app.get("/", (_, res) => {
         res.send("Hello world");
     });
+    const validateUser = (req, _, next) => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, middleware_1.checkAccess)(req);
+        next();
+    });
+    app.use(validateUser);
     app.use('/api/v1/user', user);
     app.use('/api/v1/music', music);
     app.use((_, res) => {

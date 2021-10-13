@@ -11,53 +11,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var User_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const Playlist_1 = __importDefault(require("./Playlist"));
-let User = User_1 = class User extends typeorm_1.BaseEntity {
+const User_1 = __importDefault(require("./User"));
+let Playlist = class Playlist extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
-], User.prototype, "uuid", void 0);
+], Playlist.prototype, "uuid", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
-], User.prototype, "createdAt", void 0);
-__decorate([
-    (0, typeorm_1.Column)('text', { nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "name", void 0);
-__decorate([
-    (0, typeorm_1.Column)('text', { nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)('text', { nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "picture", void 0);
+], Playlist.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "spotifyId", void 0);
+], Playlist.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => User_1, user => user.friends),
-    (0, typeorm_1.JoinTable)(),
-    __metadata("design:type", Array)
-], User.prototype, "friends", void 0);
+    (0, typeorm_1.Column)(() => User_1.default),
+    __metadata("design:type", User_1.default)
+], Playlist.prototype, "creator", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Playlist_1.default, playlist => playlist.users),
-    (0, typeorm_1.JoinTable)(),
-    __metadata("design:type", Array)
-], User.prototype, "playlists", void 0);
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Playlist.prototype, "spotifyId", void 0);
 __decorate([
-    (0, typeorm_1.Column)("jsonb", { nullable: true, default: [] }),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Playlist.prototype, "picture", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => User_1.default, user => user.playlists),
     __metadata("design:type", Array)
-], User.prototype, "highlightedsongs", void 0);
-User = User_1 = __decorate([
+], Playlist.prototype, "users", void 0);
+Playlist = __decorate([
     (0, typeorm_1.Entity)()
-], User);
-exports.default = User;
-//# sourceMappingURL=User.js.map
+], Playlist);
+exports.default = Playlist;
+//# sourceMappingURL=Playlist.js.map

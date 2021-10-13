@@ -14,6 +14,7 @@ import { createConnection } from 'typeorm';
 //routes
 const user = require('./routes/user')
 const music = require('./routes/music')
+import {checkAccess} from './utils/middleware'
 
 const main = async () => {
     const app = express();
@@ -34,6 +35,13 @@ const main = async () => {
     app.get("/", (_, res: express.Response) => {
         res.send("Hello world");
     });
+
+    //middleware
+    const validateUser = async (req:express.Request, _:any, next:express.NextFunction) => {
+        await checkAccess(req)
+        next()
+    }
+    app.use(validateUser)
 
     app.use('/api/v1/user', user)
     app.use('/api/v1/music', music)
