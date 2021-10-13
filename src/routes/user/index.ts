@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.use(update)
 // router.use(deleteM)
-// router.use(create)
+router.use(create)
 router.use(get)
 
 module.exports = router;

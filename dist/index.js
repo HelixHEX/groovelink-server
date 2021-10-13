@@ -19,6 +19,7 @@ const cors = require('cors');
 const morgan_1 = __importDefault(require("morgan"));
 const typeorm_1 = require("typeorm");
 const user = require('./routes/user');
+const music = require('./routes/music');
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     yield (0, typeorm_1.createConnection)();
@@ -30,10 +31,11 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         res.send("Hello world");
     });
     app.use('/api/v1/user', user);
+    app.use('/api/v1/music', music);
     app.use((_, res) => {
         res.status(404).json({ status: "404" });
     });
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT | 5000, () => {
         console.log(`🚀 Server ready at http://localhost:${process.env.PORT}`);
     });
 });
