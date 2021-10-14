@@ -31,7 +31,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     app.get("/", (_, res) => {
         res.send("Hello world");
     });
-    const validateUser = (req, _, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const validateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, middleware_1.checkAccess)(req);
         next();
     });

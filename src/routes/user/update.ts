@@ -57,4 +57,26 @@ router.post('/add-song-to-profile', async (req: express.Request, res: express.Re
     }
 })
 
+router.post('/remove-song-from-profile', async (req: express.Request, res: express.Response) => {
+    const { body } = req;
+    const {index, spotifyId} = body;
+    try {
+        const user = await User.findOne({where: {spotifyId}})
+        if (user) {
+            if (index >= 0 && index < user.highlightedsongs.length) {
+                console.log(spotifyId)
+                user.highlightedsongs.splice(index, 1)
+                user.save()
+                console.log(user.highlightedsongs)
+                res.json({success: true}).status(200)
+            }
+        } else {
+            res.json({success: false, error: 'User not found'}).status(404)
+        }
+    } catch(e) {
+        console.log(e)
+        res.json({success: false, error: 'User not found'}).status(404)
+    }
+})
+
 module.exports = router

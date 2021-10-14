@@ -12,11 +12,15 @@ export const checkAccess = async (req:express.Request) => {
                     req.user = data.body
                 }
             }, function (err:any) {
-                console.log('Something went wrong!', err);
+                // console.log('Something went wrong!', err.body.error.message);
+                return (_:any, res:express.Response) => {
+                    console.log(err.body.error.message)
+                    res.json({success: false, error: err.body.error.message, type: 'accessToken'})
+                }
             });
 
     } catch (e) {
-        console.log(e)
-        throw new Error(e)
+        // console.log(e)
+        throw new Error(e.body.error.message)
     }
 }

@@ -17,10 +17,11 @@ const router = express_1.default.Router();
 const User_1 = __importDefault(require("../../entities/User"));
 router.post('/friends', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
-    const { spotifyId, accessToken } = body;
+    const { spotifyId } = body;
     try {
         const user = yield User_1.default.findOne({ where: { spotifyId }, relations: ['friends'] });
         if (user) {
+            console.log(user);
             res.json({ success: true, friends: user.friends }).status(200);
         }
         else {
@@ -30,6 +31,21 @@ router.post('/friends', (req, res) => __awaiter(void 0, void 0, void 0, function
     catch (e) {
         console.log(e);
         res.json({ success: false, error: 'An error has occurred' }).status(400);
+    }
+}));
+router.post('/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { body } = req;
+    const { spotifyId } = body;
+    try {
+        const user = yield User_1.default.findOne({ where: { spotifyId } });
+        if (user) {
+            res.json({ success: true, user }).status(200);
+        }
+        else {
+            res.json({ success: false, error: 'User not found' }).status(404);
+        }
+    }
+    catch (e) {
     }
 }));
 module.exports = router;

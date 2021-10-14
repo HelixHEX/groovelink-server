@@ -14,7 +14,7 @@ import { createConnection } from 'typeorm';
 //routes
 const user = require('./routes/user')
 const music = require('./routes/music')
-import {checkAccess} from './utils/middleware'
+import { checkAccess } from './utils/middleware'
 
 const main = async () => {
     const app = express();
@@ -29,7 +29,7 @@ const main = async () => {
     app.use(express.json());
 
     //cors 
-    app.use(cors({origin: ['http://localhost:3000']}))
+    app.use(cors({ origin: ['http://localhost:3000'] }))
 
     //routes
     app.get("/", (_, res: express.Response) => {
@@ -37,9 +37,16 @@ const main = async () => {
     });
 
     //middleware
-    const validateUser = async (req:express.Request, _:any, next:express.NextFunction) => {
+    const validateUser = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
         await checkAccess(req)
         next()
+        // console.log(check)
+        // try {
+        //     await checkAccess(req)
+        //     // next()
+        // } catch (e) {
+        //     res.json({success: false, error: e}).status(400)
+        // }
     }
     app.use(validateUser)
 

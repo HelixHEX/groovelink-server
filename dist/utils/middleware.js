@@ -21,12 +21,14 @@ const checkAccess = (req) => __awaiter(void 0, void 0, void 0, function* () {
                 req.user = data.body;
             };
         }, function (err) {
-            console.log('Something went wrong!', err);
+            return (_, res) => {
+                console.log(err.body.error.message);
+                res.json({ success: false, error: err.body.error.message, type: 'accessToken' });
+            };
         });
     }
     catch (e) {
-        console.log(e);
-        throw new Error(e);
+        throw new Error(e.body.error.message);
     }
 });
 exports.checkAccess = checkAccess;

@@ -72,5 +72,28 @@ router.post('/add-song-to-profile', (req, res) => __awaiter(void 0, void 0, void
         res.json({ success: false, error: 'An error has occurred' }).status(400);
     }
 }));
+router.post('/remove-song-from-profile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { body } = req;
+    const { index, spotifyId } = body;
+    try {
+        const user = yield User_1.default.findOne({ where: { spotifyId } });
+        if (user) {
+            if (index >= 0 && index < user.highlightedsongs.length) {
+                console.log(spotifyId);
+                user.highlightedsongs.splice(index, 1);
+                user.save();
+                console.log(user.highlightedsongs);
+                res.json({ success: true }).status(200);
+            }
+        }
+        else {
+            res.json({ success: false, error: 'User not found' }).status(404);
+        }
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'User not found' }).status(404);
+    }
+}));
 module.exports = router;
 //# sourceMappingURL=update.js.map
