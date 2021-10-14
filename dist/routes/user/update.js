@@ -43,5 +43,34 @@ router.post('/add-friend', (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.json({ success: false, error: e }).status(400);
     }
 }));
+router.post('/add-song-to-profile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { body } = req;
+    const { songId, accessToken, spotifyId, name, artists } = body;
+    try {
+        const user = yield User_1.default.findOne({ where: { spotifyId } });
+        if (user) {
+            console.log(user.highlightedsongs);
+            if (user.highlightedsongs.length < 3) {
+                user.highlightedsongs.push({
+                    name,
+                    spotifyId: songId,
+                    artists
+                });
+                user.save();
+                res.json({ success: true }).status(200);
+            }
+            else {
+                res.json({ success: false, error: 'Maximum number of songs reached' }).status(204);
+            }
+        }
+        else {
+            res.json({ success: false, error: 'User not found' }).status(404);
+        }
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'An error has occurred' }).status(400);
+    }
+}));
 module.exports = router;
 //# sourceMappingURL=update.js.map

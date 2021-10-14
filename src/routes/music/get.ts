@@ -10,27 +10,29 @@ const SpotifyWebApi = require('spotify-web-api-node');
 //     // redirectUri: 'http://www.example.com/callback'
 // });
 const spotifyApi = new SpotifyWebApi()
+import User from '../../entities/User'
 
-router.post('/playlists', (req, res) => {
+router.post('/playlists', async (req, res) => {
     const { body } = req;
-    const { accessToken } = body;
-    console.log(accessToken)
+    const { accessToken, spotifyId } = body;
     try {
-        if (accessToken) {
-            spotifyApi.setAccessToken(accessToken)
+        const user = await User.findOne({ where: { spotifyId } });
 
+        if (user && spotifyId.length > 0) {
+            spotifyApi.setAccessToken(accessToken)
             spotifyApi.getUserPlaylists()
                 .then(function (data: any) {
                     const playlists = data.body.items
                     console.log(playlists);
-                    res.json({ success: true, playlists }).status(200)
+                    res.json({ success: true, playlists, highlightedsongs: user.highlightedsongs }).status(200)
                 }, function (err: any) {
                     const errMessage = err.body.error.message
                     if (errMessage === 'The access token expired') res.json({ success: false, error: 'User not logged in', type: 'accessToken' }).status(400)
                     else res.json({ success: false, error: 'An error has occurred' }).status(400)
                 });
-        } else 
-            res.json({success: false, error: 'Invalid Access'})
+        } else {
+            res.json({ success: false, error: 'User not found' }).status(400)
+        }
     } catch (e) {
         console.log(e)
         res.json({ success: false, error: 'An error has occurred' }).status(400)
@@ -56,8 +58,8 @@ router.post('/playlist', (req, res) => {
                     if (errMessage === 'The access token expired') res.json({ success: false, error: 'User not logged in', type: 'accessToken' }).status(400)
                     else res.json({ success: false, error: 'An error has occurred' }).status(400)
                 });
-        } else 
-            res.json({success: false, error: 'Invalid Access'})
+        } else
+            res.json({ success: false, error: 'Invalid Access' })
     } catch (e) {
         console.log(e)
         res.json({ success: false, error: 'An error has occurred' }).status(400)

@@ -11,8 +11,8 @@ import Playlist from "./Playlist";
 
 type song = {
     name: string;
-    artist: string;
-    duration: string;
+    artists: any[];
+    spotifyId: string;
   };
 
 @Entity()
