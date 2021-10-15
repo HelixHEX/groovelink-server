@@ -23,15 +23,27 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text', { nullable: true, default: 'test' }),
-    __metadata("design:type", Object)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], User.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text', { nullable: true, default: 'test' }),
-    __metadata("design:type", Object)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], User.prototype, "age", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], User.prototype, "city", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], User.prototype, "state", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text', { nullable: true, default: 'test' }),
+    (0, typeorm_1.Column)('text', { nullable: true }),
     __metadata("design:type", Object)
 ], User.prototype, "picture", void 0);
 __decorate([
@@ -39,10 +51,27 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "spotifyId", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => User_1, user => user.friends),
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.following),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
-], User.prototype, "friends", void 0);
+], User.prototype, "followers", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.followers),
+    __metadata("design:type", Array)
+], User.prototype, "following", void 0);
+__decorate([
+    (0, typeorm_1.Column)("jsonb", { nullable: true, default: [] }),
+    __metadata("design:type", Array)
+], User.prototype, "highlightedsongs", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.beenSkippedBy),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", Array)
+], User.prototype, "hasSkipped", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.hasSkipped),
+    __metadata("design:type", Array)
+], User.prototype, "beenSkippedBy", void 0);
 User = User_1 = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

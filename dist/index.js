@@ -19,21 +19,32 @@ const cors = require('cors');
 const morgan_1 = __importDefault(require("morgan"));
 const typeorm_1 = require("typeorm");
 const user = require('./routes/user');
+const music = require('./routes/music');
+const middleware_1 = require("./utils/middleware");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     yield (0, typeorm_1.createConnection)();
     morgan_1.default.token('body', (req, res) => JSON.stringify(req.body));
     app.use((0, morgan_1.default)(":remote-user [:date[clf]] ':method :status :url HTTP/:http-version' :body ':user-agent' - :response-time ms"));
     app.use(express_1.default.json());
-    app.use(cors({ origin: ['http://localhost:3000'] }));
+    app.use(cors({ origin: ['http://localhost:3000', 'https://www.groovelynk.com'] }));
     app.get("/", (_, res) => {
         res.send("Hello world");
     });
+    const validateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        let check = yield (0, middleware_1.checkAccess)(req, res);
+        if (check === 'User logged in')
+            next();
+        else
+            res.json({ success: false, error: 'User not logged in', type: 'accessToken' });
+    });
+    app.use(validateUser);
     app.use('/api/v1/user', user);
+    app.use('/api/v1/music', music);
     app.use((_, res) => {
         res.status(404).json({ status: "404" });
     });
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT | 5000, () => {
         console.log(`🚀 Server ready at http://localhost:${process.env.PORT}`);
     });
 });

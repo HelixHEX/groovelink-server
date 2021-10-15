@@ -4,10 +4,19 @@ import {
     CreateDateColumn,
     Entity,
     PrimaryGeneratedColumn,
-    // OneToMany,
     ManyToMany,
     JoinTable,
+    OneToMany,
+    // RelationCount
 } from "typeorm";
+// import Friendship from "./Friendship";
+// import Playlist from "./Playlist";
+
+type song = {
+    name: string;
+    artists: any[];
+    spotifyId: string;
+};
 
 @Entity()
 export default class User extends BaseEntity {
@@ -17,20 +26,56 @@ export default class User extends BaseEntity {
     @Column()
     @CreateDateColumn()
     createdAt: Date;
-    
-    @Column('text', {nullable: true, default: 'test'})
-    name: string | null;
 
-    @Column('text', {nullable: true, default: 'test'})
-    email: string | null;
+    @Column()
+    name!: string;
 
-    @Column('text', {nullable: true, default: 'test'})
+    @Column()
+    age!: number;
+
+    @Column()
+    city!: string;
+
+    @Column()
+    state!: string;
+
+    @Column()
+    email!: string;
+
+    @Column('text', { nullable: true })
     picture: string | null;
 
     @Column()
     spotifyId!: string;
 
-    @ManyToMany(() => User, user => user.friends)
+    // @ManyToMany(() => User, user => user.friends, {onDelete: "CASCADE", onUpdate: 'CASCADE'})
+    // @JoinTable()
+    // friends: User[]
+    // @ManyToMany(() => User)
+    // @JoinTable()
+    // friends: User[]
+    @ManyToMany(() => User, user => user.following)
     @JoinTable()
-    friends: User[]
+    followers: User[]
+
+    @ManyToMany(() => User, user => user.followers)
+    following: User[]
+
+  
+
+    @Column("jsonb", { nullable: true, default: [] })
+    highlightedsongs: song[];
+
+    @ManyToMany(() => User, user => user.beenSkippedBy)
+    @JoinTable()
+    hasSkipped: User[]
+
+    @ManyToMany(() => User, user => user.hasSkipped)
+    beenSkippedBy: User[]
+
+    // @RelationCount((user: User) => user.followers)
+    // followersCount: number;
+
+    // @RelationCount((user: User) => user.following)
+    // followingCount: number;
 }

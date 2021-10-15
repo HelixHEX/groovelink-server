@@ -24,6 +24,7 @@
     "morgan": "^1.10.0",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
+    "spotify-web-api-node": "^5.0.2",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   }
