@@ -38,6 +38,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         else
             res.json({ success: false, error: 'User not logged in', type: 'accessToken' });
     });
+    app.use(validateUser);
     app.use('/api/v1/user', user);
     app.use('/api/v1/music', music);
     app.use((_, res) => {

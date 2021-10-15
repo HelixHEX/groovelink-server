@@ -44,7 +44,7 @@ const main = async () => {
         else
             res.json({success: false, error: 'User not logged in', type: 'accessToken'})
     }
-    // app.use(validateUser)
+    app.use(validateUser)
 
     app.use('/api/v1/user', user)
     app.use('/api/v1/music', music)

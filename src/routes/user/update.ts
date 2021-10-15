@@ -156,4 +156,26 @@ router.post('/skip-user', async (req, res) => {
     }
 })
 
+router.post('/update-info', async (req, res) => {
+    const {body} = req;
+    const {fName, lName, email, age, city, state, spotifyId} = body;
+    try {
+        const user = await User.findOne({where: {spotifyId}})
+        if (user) {
+            user.name = `${fName} ${lName}`
+            user.email = email;
+            user.age = age;
+            user.city = city;
+            user.state = state
+            user.save()
+            res.json({success: true})
+        } else {
+            res.json({success: false, error: 'User not found'}).status(404)
+        }
+    } catch(e) {
+        console.log(e);
+        res.json({success: false, error: 'An error has occurred'}).status(400)
+    }
+})
+
 module.exports = router

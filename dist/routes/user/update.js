@@ -150,5 +150,28 @@ router.post('/skip-user', (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.json({ success: false, error: 'An error has occurred' }).status(400);
     }
 }));
+router.post('/update-info', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { body } = req;
+    const { fName, lName, email, age, city, state, spotifyId } = body;
+    try {
+        const user = yield User_1.default.findOne({ where: { spotifyId } });
+        if (user) {
+            user.name = `${fName} ${lName}`;
+            user.email = email;
+            user.age = age;
+            user.city = city;
+            user.state = state;
+            user.save();
+            res.json({ success: true });
+        }
+        else {
+            res.json({ success: false, error: 'User not found' }).status(404);
+        }
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'An error has occurred' }).status(400);
+    }
+}));
 module.exports = router;
 //# sourceMappingURL=update.js.map
