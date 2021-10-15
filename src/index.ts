@@ -29,7 +29,7 @@ const main = async () => {
     app.use(express.json());
 
     //cors 
-    app.use(cors({ origin: ['http://localhost:3000'] }))
+    app.use(cors({ origin: ['http://localhost:3000', 'https://www.groovelynk.com'] }))
 
     //routes
     app.get("/", (_, res: express.Response) => {
