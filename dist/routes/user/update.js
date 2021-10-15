@@ -15,34 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const User_1 = __importDefault(require("../../entities/User"));
-router.post('/add-friend', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
-    const { spotifyId, otheruserId } = body;
-    try {
-        const user = yield User_1.default.findOne({ where: { spotifyId }, relations: ['friends'] });
-        if (user) {
-            const friendUser = yield User_1.default.findOne({ where: { spotifyId: otheruserId }, relations: ['friends'] });
-            if (friendUser) {
-                user.friends.push(friendUser);
-                user.save();
-                friendUser.friends.push(user);
-                friendUser.save();
-                console.log({ user, friendUser });
-                res.json({ success: true }).status(200);
-            }
-            else {
-                res.json({ success: false, error: 'Other user not found' }).status(404);
-            }
-        }
-        else {
-            res.json({ success: false, error: 'User not found' }).status(404);
-        }
-    }
-    catch (e) {
-        console.log(e);
-        res.json({ success: false, error: e }).status(400);
-    }
-}));
 router.post('/add-song-to-profile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
     const { songId, accessToken, spotifyId, name, artists } = body;
@@ -74,13 +46,13 @@ router.post('/add-song-to-profile', (req, res) => __awaiter(void 0, void 0, void
 }));
 router.post('/remove-song-from-profile', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
-    const { index, spotifyId } = body;
+    const { index, spotifyId, songId } = body;
     try {
         const user = yield User_1.default.findOne({ where: { spotifyId } });
         if (user) {
-            if (index >= 0 && index < user.highlightedsongs.length) {
+            if (songId) {
                 console.log(spotifyId);
-                user.highlightedsongs.splice(index, 1);
+                user.highlightedsongs = user.highlightedsongs.filter(song => song.spotifyId !== songId);
                 user.save();
                 console.log(user.highlightedsongs);
                 res.json({ success: true }).status(200);
@@ -91,7 +63,7 @@ router.post('/remove-song-from-profile', (req, res) => __awaiter(void 0, void 0,
                 res.json({ success: true }).status(200);
             }
             else {
-                console.log('Invalid index', index);
+                console.log('Invalid id', songId);
                 res.json({ success: false, error: 'An error has occurred' }).status(400);
             }
         }
@@ -102,6 +74,42 @@ router.post('/remove-song-from-profile', (req, res) => __awaiter(void 0, void 0,
     catch (e) {
         console.log(e);
         res.json({ success: false, error: 'User not found' }).status(404);
+    }
+}));
+router.post('/add-friend', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { body } = req;
+    const { spotifyId, userId } = body;
+    try {
+        const user = yield User_1.default.findOne({ where: { spotifyId }, relations: ['following'] });
+        if (user) {
+            if (!user.following.find(following => following.spotifyId === userId)) {
+                if (user.following.find(following => following.spotifyId === userId)) {
+                    res.json({ success: false, error: 'Already following' }).status(400);
+                }
+                else {
+                    const otherUser = yield User_1.default.findOne({ where: { spotifyId: userId } });
+                    if (otherUser) {
+                        user.following.push(otherUser);
+                        user.save();
+                        res.json({ success: true }).status(200);
+                    }
+                    else {
+                        res.json({ success: false, error: "Other user not found" }).status(404);
+                    }
+                }
+            }
+            else {
+                console.log(user.following);
+                res.json({ success: false, error: 'Already following' }).status(204);
+            }
+        }
+        else {
+            res.json({ success: false, error: 'User not found' }).status(404);
+        }
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'An error has occurred' }).status(400);
     }
 }));
 module.exports = router;

@@ -19,10 +19,15 @@ router.post('/friends', (req, res) => __awaiter(void 0, void 0, void 0, function
     const { body } = req;
     const { spotifyId } = body;
     try {
-        const user = yield User_1.default.findOne({ where: { spotifyId }, relations: ['friends'] });
+        const user = yield User_1.default.findOne({ where: { spotifyId }, relations: ['following', 'followers'] });
         if (user) {
-            console.log(user);
-            res.json({ success: true, friends: user.friends }).status(200);
+            let friends = [];
+            friends = user.followers.map(follower => {
+                if (user.following.find(following => following.uuid === follower.uuid))
+                    return follower;
+                return;
+            });
+            res.json({ success: true, friends }).status(200);
         }
         else {
             res.json({ success: false, error: 'User not found', type: 'newAccount' }).status(404);
@@ -55,7 +60,6 @@ router.post('/check-account', (req, res) => __awaiter(void 0, void 0, void 0, fu
         const user = yield User_1.default.findOne({ where: { spotifyId } });
         console.log(spotifyId);
         if (user) {
-            console.log({ user });
             res.json({ success: true }).status(200);
         }
         else {

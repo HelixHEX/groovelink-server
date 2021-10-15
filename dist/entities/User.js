@@ -55,10 +55,14 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "spotifyId", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => User_1, user => user.friends, { onDelete: "CASCADE" }),
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.following),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
-], User.prototype, "friends", void 0);
+], User.prototype, "followers", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.followers),
+    __metadata("design:type", Array)
+], User.prototype, "following", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => Playlist_1.default, playlist => playlist.users, { onDelete: "CASCADE" }),
     (0, typeorm_1.JoinTable)(),

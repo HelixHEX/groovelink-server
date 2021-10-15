@@ -52,12 +52,32 @@ router.post('/playlist', (req, res) => {
                     const playlist = data.body
                     res.json({ success: true, playlist }).status(200)
                 }, function (err: any) {
-                    const errMessage = err.body.error.message
-                    if (errMessage === 'The access token expired') res.json({ success: false, error: 'User not logged in', type: 'accessToken' }).status(400)
+                    // const errMessage = err.body.error.message
+                    if (err.body.error.message === 'The access token expired') res.json({ success: false, error: 'User not logged in', type: 'accessToken' }).status(400)
                     else res.json({ success: false, error: 'An error has occurred' }).status(400)
                 });
         } else
             res.json({ success: false, error: 'Invalid Access' })
+    } catch (e) {
+        console.log(e)
+        res.json({ success: false, error: 'An error has occurred' }).status(400)
+    }
+})
+
+
+router.post('/search-track', (req, res) => {
+    const { body } = req;
+    const { accessToken, name } = body;
+    try {
+        spotifyApi.setAccessToken(accessToken)
+        spotifyApi.searchTracks(name)
+            .then(function (data:any) {
+                console.log(`Search by ${name}`, data.body.tracks.items);
+                res.json({success: true, songs: data.body.tracks.items}).status(200)
+            }, function (err:any) {
+                console.error(err);
+                res.json({success: false, error: 'An error has occurred'}).status(204)
+            });
     } catch (e) {
         console.log(e)
         res.json({ success: false, error: 'An error has occurred' }).status(400)

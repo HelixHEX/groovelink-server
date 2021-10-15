@@ -8,11 +8,14 @@ router.post('/friends', async (req: express.Request, res: express.Response) => {
     const { body } = req;
     const { spotifyId } = body;
     try {
-        const user = await User.findOne({ where: { spotifyId }, relations: ['friends']})
+        const user = await User.findOne({ where: { spotifyId }, relations: ['following', 'followers']})
         if (user) {
-            // const friendsUnfiltered = user.friends.splice(0, 5);
-            console.log(user)
-            res.json({success: true, friends: user.friends}).status(200)
+            let friends = [] as any
+            friends = user.followers.map(follower => {
+                if (user.following.find(following => following.uuid === follower.uuid)) return follower
+                return
+            })
+            res.json({success: true, friends}).status(200)
         } else {
             res.json({ success: false, error: 'User not found', type: 'newAccount' }).status(404)
         }
@@ -45,7 +48,6 @@ router.post('/check-account', async (req: express.Request, res: express.Response
         const user = await User.findOne({ where: { spotifyId } })
         console.log(spotifyId)
         if (user) {
-            console.log({ user })
             res.json({ success: true }).status(200)
         } else {
             res.json({ success: false, error: 'Create account' }).status(200)
@@ -55,6 +57,8 @@ router.post('/check-account', async (req: express.Request, res: express.Response
         res.json({ error: e }).status(400)
     }
 })
+
+
 
 
 module.exports = router
