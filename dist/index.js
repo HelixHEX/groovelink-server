@@ -32,8 +32,11 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         res.send("Hello world");
     });
     const validateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, middleware_1.checkAccess)(req);
-        next();
+        let check = yield (0, middleware_1.checkAccess)(req, res);
+        if (check === 'User logged in')
+            next();
+        else
+            res.json({ success: false, error: 'User not logged in', type: 'accessToken' });
     });
     app.use(validateUser);
     app.use('/api/v1/user', user);

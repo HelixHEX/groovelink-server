@@ -11,24 +11,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAccess = void 0;
 const SpotifyWebApi = require('spotify-web-api-node');
-const checkAccess = (req) => __awaiter(void 0, void 0, void 0, function* () {
+const checkAccess = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let message;
     try {
         const spotifyApi = new SpotifyWebApi();
         spotifyApi.setAccessToken(req.body.accessToken);
-        spotifyApi.getMe()
-            .then(function (data) {
-            return (req, res, next) => {
-                req.user = data.body;
-            };
+        yield spotifyApi.getMe()
+            .then(function () {
+            message = 'User logged in';
         }, function (err) {
-            return (_, res) => {
-                console.log(err.body.error.message);
-                res.json({ success: false, error: err.body.error.message, type: 'accessToken' });
-            };
+            if (err.body.error.message === 'The access token expired')
+                message = 'User not logged in';
+            else
+                message = err.body.error.message;
         });
+        return message;
     }
     catch (e) {
-        throw new Error(e.body.error.message);
+        message = 'An error has occurred';
+        return message;
     }
 });
 exports.checkAccess = checkAccess;

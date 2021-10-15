@@ -85,6 +85,15 @@ router.post('/remove-song-from-profile', (req, res) => __awaiter(void 0, void 0,
                 console.log(user.highlightedsongs);
                 res.json({ success: true }).status(200);
             }
+            else if (user.highlightedsongs.length === 1) {
+                user.highlightedsongs = [];
+                user.save();
+                res.json({ success: true }).status(200);
+            }
+            else {
+                console.log('Invalid index', index);
+                res.json({ success: false, error: 'An error has occurred' }).status(400);
+            }
         }
         else {
             res.json({ success: false, error: 'User not found' }).status(404);

@@ -27,7 +27,6 @@ router.post('/playlists', (req, res) => __awaiter(void 0, void 0, void 0, functi
             spotifyApi.getUserPlaylists()
                 .then(function (data) {
                 const playlists = data.body.items;
-                console.log(playlists);
                 res.json({ success: true, playlists, highlightedsongs: user.highlightedsongs }).status(200);
             }, function (err) {
                 const errMessage = err.body.error.message;
@@ -55,7 +54,6 @@ router.post('/playlist', (req, res) => {
             spotifyApi.setAccessToken(accessToken);
             spotifyApi.getPlaylist(playlistId)
                 .then(function (data) {
-                console.log(data.body);
                 const playlist = data.body;
                 res.json({ success: true, playlist }).status(200);
             }, function (err) {

@@ -38,15 +38,11 @@ const main = async () => {
 
     //middleware
     const validateUser = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-        await checkAccess(req)
-        next()
-        // console.log(check)
-        // try {
-        //     await checkAccess(req)
-        //     // next()
-        // } catch (e) {
-        //     res.json({success: false, error: e}).status(400)
-        // }
+        let check = await checkAccess(req, res)
+        if (check === 'User logged in')
+            next()
+        else
+            res.json({success: false, error: 'User not logged in', type: 'accessToken'})
     }
     app.use(validateUser)
 

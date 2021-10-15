@@ -24,11 +24,20 @@ export default class User extends BaseEntity {
     @CreateDateColumn()
     createdAt: Date;
     
-    @Column('text', {nullable: true})
-    name: string | null;
+    @Column()
+    name!: string;
 
-    @Column('text', {nullable: true})
-    email: string | null;
+    @Column()
+    age!: number;
+
+    @Column()
+    city!: string;
+
+    @Column()
+    state!: string;
+
+    @Column()
+    email!: string;
 
     @Column('text', {nullable: true})
     picture: string | null;
@@ -36,14 +45,18 @@ export default class User extends BaseEntity {
     @Column()
     spotifyId!: string;
 
-    @ManyToMany(() => User, user => user.friends)
+    @ManyToMany(() => User, user => user.friends, {onDelete: "CASCADE"})
     @JoinTable()
     friends: User[]
 
-    @ManyToMany(() => Playlist, playlist => playlist.users)
+    @ManyToMany(() => Playlist, playlist => playlist.users, {onDelete: "CASCADE"})
     @JoinTable()
     playlists: Playlist[]
 
     @Column("jsonb", { nullable: true, default: [] })
     highlightedsongs: song[];
+
+    @ManyToMany(() => User, user => user.added, {onDelete: "CASCADE"})
+    @JoinTable()
+    added: User[]
 }

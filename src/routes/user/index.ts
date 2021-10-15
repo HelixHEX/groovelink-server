@@ -8,7 +8,7 @@ const get = require('./get')
 const router = express.Router();
 
 router.use(update)
-// router.use(deleteM)
+router.use(deleteM)
 router.use(create)
 router.use(get)
 

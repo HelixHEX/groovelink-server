@@ -15,28 +15,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const User_1 = __importDefault(require("../../entities/User"));
-router.post('/check-account', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
-    const { spotifyId, name, picture, email } = body;
+    const { spotifyId, fName, lName, age, email, picture, city, state } = body;
     try {
         const user = yield User_1.default.findOne({ where: { spotifyId } });
-        if (user) {
-            console.log({ user });
+        if (!user) {
+            yield User_1.default.create({
+                spotifyId,
+                name: `${fName} ${lName}`,
+                email,
+                age,
+                picture,
+                city,
+                state
+            }).save();
             res.json({ success: true }).status(200);
         }
         else {
-            yield User_1.default.create({
-                name,
-                spotifyId,
-                picture,
-                email
-            }).save();
-            res.json({ success: true }).status(200);
+            res.json({ success: false, error: 'User exists' }).status(204);
         }
     }
     catch (e) {
         console.log(e);
-        res.json({ error: e }).status(400);
+        res.json({ success: false, error: 'An error has occurred' }).status(200);
     }
 }));
 module.exports = router;

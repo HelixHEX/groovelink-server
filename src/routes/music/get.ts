@@ -23,7 +23,6 @@ router.post('/playlists', async (req, res) => {
             spotifyApi.getUserPlaylists()
                 .then(function (data: any) {
                     const playlists = data.body.items
-                    console.log(playlists);
                     res.json({ success: true, playlists, highlightedsongs: user.highlightedsongs }).status(200)
                 }, function (err: any) {
                     const errMessage = err.body.error.message
@@ -50,7 +49,6 @@ router.post('/playlist', (req, res) => {
 
             spotifyApi.getPlaylist(playlistId)
                 .then(function (data: any) {
-                    console.log(data.body)
                     const playlist = data.body
                     res.json({ success: true, playlist }).status(200)
                 }, function (err: any) {

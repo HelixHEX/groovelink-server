@@ -27,12 +27,24 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text', { nullable: true }),
-    __metadata("design:type", Object)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], User.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text', { nullable: true }),
-    __metadata("design:type", Object)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], User.prototype, "age", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], User.prototype, "city", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], User.prototype, "state", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)('text', { nullable: true }),
@@ -43,12 +55,12 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "spotifyId", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => User_1, user => user.friends),
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.friends, { onDelete: "CASCADE" }),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], User.prototype, "friends", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Playlist_1.default, playlist => playlist.users),
+    (0, typeorm_1.ManyToMany)(() => Playlist_1.default, playlist => playlist.users, { onDelete: "CASCADE" }),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], User.prototype, "playlists", void 0);
@@ -56,6 +68,11 @@ __decorate([
     (0, typeorm_1.Column)("jsonb", { nullable: true, default: [] }),
     __metadata("design:type", Array)
 ], User.prototype, "highlightedsongs", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.added, { onDelete: "CASCADE" }),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", Array)
+], User.prototype, "added", void 0);
 User = User_1 = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

@@ -25,7 +25,7 @@ router.post('/friends', (req, res) => __awaiter(void 0, void 0, void 0, function
             res.json({ success: true, friends: user.friends }).status(200);
         }
         else {
-            res.json({ success: false, error: 'User not found' }).status(404);
+            res.json({ success: false, error: 'User not found', type: 'newAccount' }).status(404);
         }
     }
     catch (e) {
@@ -46,6 +46,25 @@ router.post('/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
     catch (e) {
+    }
+}));
+router.post('/check-account', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { body } = req;
+    const { spotifyId } = body;
+    try {
+        const user = yield User_1.default.findOne({ where: { spotifyId } });
+        console.log(spotifyId);
+        if (user) {
+            console.log({ user });
+            res.json({ success: true }).status(200);
+        }
+        else {
+            res.json({ success: false, error: 'Create account' }).status(200);
+        }
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ error: e }).status(400);
     }
 }));
 module.exports = router;
