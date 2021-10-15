@@ -1,2 +1,4 @@
 node_modules
 ormconfig.json
+src/migrations
+dist/migrations

@@ -39,7 +39,8 @@ router.post('/me', async (req: express.Request, res: express.Response) => {
             res.json({ success: false, error: 'User not found' }).status(404)
         }
     } catch (e) {
-
+        console.log(e)
+        res.json({success: false, error: "An error has occurred"}).status(200)
     }
 })
 

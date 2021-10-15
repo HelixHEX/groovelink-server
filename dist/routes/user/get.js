@@ -52,6 +52,8 @@ router.post('/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
     catch (e) {
+        console.log(e);
+        res.json({ success: false, error: "An error has occurred" }).status(200);
     }
 }));
 router.post('/check-account', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
