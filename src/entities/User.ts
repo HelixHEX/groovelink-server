@@ -10,7 +10,7 @@ import {
     // RelationCount
 } from "typeorm";
 // import Friendship from "./Friendship";
-import Playlist from "./Playlist";
+// import Playlist from "./Playlist";
 
 type song = {
     name: string;
@@ -61,9 +61,7 @@ export default class User extends BaseEntity {
     @ManyToMany(() => User, user => user.followers)
     following: User[]
 
-    @ManyToMany(() => Playlist, playlist => playlist.users, { onDelete: "CASCADE" })
-    @JoinTable()
-    playlists: Playlist[]
+  
 
     @Column("jsonb", { nullable: true, default: [] })
     highlightedsongs: song[];
