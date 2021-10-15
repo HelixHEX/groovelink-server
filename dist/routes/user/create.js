@@ -21,25 +21,15 @@ router.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const user = yield User_1.default.findOne({ where: { spotifyId } });
         if (!user) {
-            let elias = yield User_1.default.findOne({ where: { spotifyId: 'eliwam21' }, relations: ['following', 'followers'] });
-            if (elias) {
-                const newUser = yield User_1.default.create({
-                    spotifyId,
-                    name: `${fName} ${lName}`,
-                    email,
-                    age,
-                    picture,
-                    city,
-                    state,
-                    followers: [elias],
-                    following: [elias],
-                }).save();
-                if (newUser) {
-                    elias.following.push(newUser);
-                    elias.followers.push(newUser);
-                }
-                elias.save();
-            }
+            yield User_1.default.create({
+                spotifyId,
+                name: `${fName} ${lName}`,
+                email,
+                age,
+                picture,
+                city,
+                state,
+            }).save();
             res.json({ success: true }).status(200);
         }
         else {
@@ -49,29 +39,6 @@ router.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function*
     catch (e) {
         console.log(e);
         const errStr = e.toString();
-        res.json({ success: false, error: 'An error has occurred' }).status(400);
-    }
-}));
-router.post('/add-friend', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
-    const { spotifyId, userId } = body;
-    try {
-        const user = yield User_1.default.findOne({ where: { spotifyId }, relations: ['following'] });
-        if (user) {
-            const otherUser = yield User_1.default.findOne({ where: { spotifyId: userId } });
-            if (otherUser) {
-                user.following.push(otherUser);
-            }
-            else {
-                res.json({ success: false, error: "Other user not found" }).status(404);
-            }
-        }
-        else {
-            res.json({ success: false, error: 'User not found' }).status(404);
-        }
-    }
-    catch (e) {
-        console.log(e);
         res.json({ success: false, error: 'An error has occurred' }).status(400);
     }
 }));

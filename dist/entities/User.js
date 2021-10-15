@@ -73,10 +73,14 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "highlightedsongs", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => User_1, user => user.added, { onDelete: "CASCADE" }),
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.beenSkippedBy),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
-], User.prototype, "added", void 0);
+], User.prototype, "hasSkipped", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => User_1, user => user.hasSkipped),
+    __metadata("design:type", Array)
+], User.prototype, "beenSkippedBy", void 0);
 User = User_1 = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

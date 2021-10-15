@@ -90,24 +90,62 @@ router.post('/add-friend', async (req, res) => {
     const { body } = req;
     const { spotifyId, userId } = body;
     try {
-        const user = await User.findOne({ where: { spotifyId }, relations: ['following'] })
+        const user = await User.findOne({ where: { spotifyId }, relations: ['following', 'followers']})
         if (user) {
             if (!user.following.find(following => following.spotifyId === userId)) {
                 if (user.following.find(following => following.spotifyId === userId)) {
                     res.json({ success: false, error: 'Already following' }).status(400)
                 } else {
-                    const otherUser = await User.findOne({ where: { spotifyId: userId } })
+                    const otherUser = await User.findOne({ where: { spotifyId: userId }, relations: ['following', 'followers'] })
                     if (otherUser) {
-                        user.following.push(otherUser)
-                        user.save()
-                        res.json({ success: true }).status(200)
+                        if (otherUser.following.find(oUser => oUser.spotifyId === user.spotifyId)) {
+                            console.log('already following')
+                            user.following.push(otherUser)
+                            user.followers.push(otherUser)
+                            user.save()
+                            res.json({ success: true }).status(200)
+                        } else {
+                            user.following.push(otherUser)
+                            user.save()
+                            res.json({ success: true }).status(200)
+                        }
                     } else {
                         res.json({ success: false, error: "Other user not found" }).status(404)
                     }
                 }
             } else {
-                console.log(user.following)
-                res.json({success: false, error: 'Already following'}).status(204)
+                res.json({ success: false, error: 'Already following' }).status(204)
+            }
+        } else {
+            res.json({ success: false, error: 'User not found' }).status(404)
+        }
+    } catch (e) {
+        console.log(e)
+        res.json({ success: false, error: 'An error has occurred' }).status(400)
+    }
+})
+
+router.post('/skip-user', async (req, res) => {
+    const { body } = req;
+    const { spotifyId, userId } = body
+    try {
+        const user = await User.findOne({ where: { spotifyId }, relations: ['hasSkipped'] })
+        if (user) {
+            const otheruser = await User.findOne({ where: { spotifyId: userId }, relations: ['beenSkippedBy'] })
+            if (otheruser) {
+                if (!user.hasSkipped.find(sUser => sUser.spotifyId === userId)) {
+                    user.hasSkipped.push(otheruser)
+                    user.save()
+
+                    // otheruser.beenSkippedBy.push(user)
+                    // otheruser.save()
+
+                    res.json({ success: true }).status(200)
+                } else {
+                    res.json({ success: false, error: 'User already skipped' }).status(400)
+                }
+            } else {
+                res.json({ success: false, error: "Other user not found" }).status(404)
             }
         } else {
             res.json({ success: false, error: 'User not found' }).status(404)

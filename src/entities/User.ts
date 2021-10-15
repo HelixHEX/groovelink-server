@@ -68,9 +68,12 @@ export default class User extends BaseEntity {
     @Column("jsonb", { nullable: true, default: [] })
     highlightedsongs: song[];
 
-    @ManyToMany(() => User, user => user.added, { onDelete: "CASCADE" })
+    @ManyToMany(() => User, user => user.beenSkippedBy)
     @JoinTable()
-    added: User[]
+    hasSkipped: User[]
+
+    @ManyToMany(() => User, user => user.hasSkipped)
+    beenSkippedBy: User[]
 
     // @RelationCount((user: User) => user.followers)
     // followersCount: number;
