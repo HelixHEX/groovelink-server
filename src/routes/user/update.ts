@@ -90,7 +90,7 @@ router.post('/add-friend', async (req, res) => {
     const { body } = req;
     const { spotifyId, userId } = body;
     try {
-        const user = await User.findOne({ where: { spotifyId }, relations: ['following', 'followers']})
+        const user = await User.findOne({ where: { spotifyId }, relations: ['following', 'followers'] })
         if (user) {
             if (!user.following.find(following => following.spotifyId === userId)) {
                 if (user.following.find(following => following.spotifyId === userId)) {
@@ -157,10 +157,10 @@ router.post('/skip-user', async (req, res) => {
 })
 
 router.post('/update-info', async (req, res) => {
-    const {body} = req;
-    const {fName, lName, email, age, city, state, spotifyId} = body;
+    const { body } = req;
+    const { fName, lName, email, age, city, state, spotifyId } = body;
     try {
-        const user = await User.findOne({where: {spotifyId}})
+        const user = await User.findOne({ where: { spotifyId } })
         if (user) {
             user.name = `${fName} ${lName}`
             user.email = email;
@@ -168,13 +168,40 @@ router.post('/update-info', async (req, res) => {
             user.city = city;
             user.state = state
             user.save()
-            res.json({success: true})
+            res.json({ success: true })
         } else {
-            res.json({success: false, error: 'User not found'}).status(404)
+            res.json({ success: false, error: 'User not found' }).status(404)
         }
-    } catch(e) {
+    } catch (e) {
         console.log(e);
-        res.json({success: false, error: 'An error has occurred'}).status(400)
+        res.json({ success: false, error: 'An error has occurred' }).status(400)
+    }
+})
+
+
+router.post('/remove-friend', async (req, res) => {
+    const { body } = req;
+    const { spotifyId, userId } = body;
+    try {
+        const user = await User.findOne({ where: { spotifyId }, relations: ['following', 'followers', 'hasSkipped', 'beenSkippedBy'] })
+        if (user) {
+            const otherUser = await User.findOne({ where: { spotifyId: userId }, relations: ['following', 'followers', 'hasSkipped', 'beenSkippedBy'] })
+            if (otherUser) {
+                user.following = user.following.filter(following => following.uuid !== otherUser.uuid)
+                user.followers = user.followers.filter(follower => follower.uuid !== otherUser.uuid)
+                user.hasSkipped.push(otherUser)
+                user.save()
+                console.log(user)
+                res.json({success: true}).status(200)
+            } else {
+                res.json({ success: false, error: 'Other user not found' }).status(400)
+            }
+        } else {
+            res.json({ success: false, error: 'User not found' }).status(404)
+        }
+    } catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'An error has occurred' }).status(400)
     }
 })
 

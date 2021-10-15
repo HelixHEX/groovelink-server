@@ -173,5 +173,33 @@ router.post('/update-info', (req, res) => __awaiter(void 0, void 0, void 0, func
         res.json({ success: false, error: 'An error has occurred' }).status(400);
     }
 }));
+router.post('/remove-friend', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { body } = req;
+    const { spotifyId, userId } = body;
+    try {
+        const user = yield User_1.default.findOne({ where: { spotifyId }, relations: ['following', 'followers', 'hasSkipped', 'beenSkippedBy'] });
+        if (user) {
+            const otherUser = yield User_1.default.findOne({ where: { spotifyId: userId }, relations: ['following', 'followers', 'hasSkipped', 'beenSkippedBy'] });
+            if (otherUser) {
+                user.following = user.following.filter(following => following.uuid !== otherUser.uuid);
+                user.followers = user.followers.filter(follower => follower.uuid !== otherUser.uuid);
+                user.hasSkipped.push(otherUser);
+                user.save();
+                console.log(user);
+                res.json({ success: true }).status(200);
+            }
+            else {
+                res.json({ success: false, error: 'Other user not found' }).status(400);
+            }
+        }
+        else {
+            res.json({ success: false, error: 'User not found' }).status(404);
+        }
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'An error has occurred' }).status(400);
+    }
+}));
 module.exports = router;
 //# sourceMappingURL=update.js.map
