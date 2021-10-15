@@ -8,13 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var User_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const Playlist_1 = __importDefault(require("./Playlist"));
 let User = User_1 = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -63,11 +59,6 @@ __decorate([
     (0, typeorm_1.ManyToMany)(() => User_1, user => user.followers),
     __metadata("design:type", Array)
 ], User.prototype, "following", void 0);
-__decorate([
-    (0, typeorm_1.ManyToMany)(() => Playlist_1.default, playlist => playlist.users, { onDelete: "CASCADE" }),
-    (0, typeorm_1.JoinTable)(),
-    __metadata("design:type", Array)
-], User.prototype, "playlists", void 0);
 __decorate([
     (0, typeorm_1.Column)("jsonb", { nullable: true, default: [] }),
     __metadata("design:type", Array)
