@@ -84,4 +84,14 @@ router.post('/discover', async (req, res) => {
      }
 })
 
+router.post('/all-users', async (req, res) => {
+    try {
+        const users = await User.find()
+        res.json({success: true, users}).status(200)
+    } catch(e) {
+        console.log(e)
+        res.json({success: false, error: "An error has occurred"}).status(200)
+    }
+})
+
 module.exports = router
