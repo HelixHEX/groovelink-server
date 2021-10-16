@@ -98,5 +98,15 @@ router.post('/discover', (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.json({ success: false, error: 'An error has occurred' }).status(400);
     }
 }));
+router.post('/all-users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const users = yield User_1.default.find();
+        res.json({ success: true, users }).status(200);
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: "An error has occurred" }).status(200);
+    }
+}));
 module.exports = router;
 //# sourceMappingURL=get.js.map
