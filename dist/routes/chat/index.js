@@ -16,7 +16,7 @@ const express_1 = __importDefault(require("express"));
 const User_1 = __importDefault(require("../../entities/User"));
 const stream_chat_1 = require("stream-chat");
 const router = express_1.default.Router();
-const serverClient = stream_chat_1.StreamChat.getInstance(process.env.GET_STREAM_KEY, process.env.GET_STREAM_SECRET);
+const serverClient = new stream_chat_1.StreamChat(process.env.GET_STREAM_KEY, process.env.GET_STREAM_SECRET);
 router.post('/chat-token', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
     const { id } = body;
@@ -49,6 +49,36 @@ router.post('/import-users', (req, res) => __awaiter(void 0, void 0, void 0, fun
         }
         yield serverClient.upsertUsers(members);
         res.json({ success: true, message: 'Users created' }).status(200);
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'An error has occurred' }).status(400);
+    }
+}));
+router.post('/import-channels', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let users = yield User_1.default.find({ relations: ['following', 'followers'] });
+        for (var i = 0; i < users.length; i++) {
+            const user = users[i];
+            let friends = [];
+            if (user.following.length > 0) {
+                user.followers.map(follower => {
+                    let exists = user.following.find(following => following.uuid === follower.uuid);
+                    if (exists)
+                        friends.push(follower);
+                });
+            }
+            if (friends.length > 0) {
+                for (var j = 0; j < friends.length; j++) {
+                    const channel = serverClient.channel('messaging', {
+                        members: [friends[j].uuid, user.uuid],
+                        created_by_id: 'helixhex'
+                    });
+                    yield channel.create();
+                }
+            }
+        }
+        res.json({ success: true, message: 'Channels imported' }).status(200);
     }
     catch (e) {
         console.log(e);
