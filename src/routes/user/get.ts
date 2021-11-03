@@ -16,7 +16,7 @@ router.post('/friends', async (req: express.Request, res: express.Response) => {
                 let exists = user.following.find(following => following.uuid === follower.uuid)
                 if (exists) friends.push(follower)
             })
-            console.log(friends.length)
+            // console.log(friends.length)
             res.json({ success: true, friends }).status(200)
         } else {
             res.json({ success: false, error: 'User not found', type: 'newAccount' }).status(404)

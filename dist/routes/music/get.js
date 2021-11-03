@@ -48,7 +48,6 @@ router.post('/playlists', (req, res) => __awaiter(void 0, void 0, void 0, functi
 router.post('/playlist', (req, res) => {
     const { body } = req;
     const { accessToken, playlistId } = body;
-    console.log(accessToken);
     try {
         if (accessToken) {
             spotifyApi.setAccessToken(accessToken);
@@ -78,7 +77,6 @@ router.post('/search-track', (req, res) => {
         spotifyApi.setAccessToken(accessToken);
         spotifyApi.searchTracks(name)
             .then(function (data) {
-            console.log(`Search by ${name}`, data.body.tracks.items);
             res.json({ success: true, songs: data.body.tracks.items }).status(200);
         }, function (err) {
             console.error(err);

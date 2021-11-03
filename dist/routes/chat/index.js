@@ -13,42 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const User_1 = __importDefault(require("../../entities/User"));
 const stream_chat_1 = require("stream-chat");
 const router = express_1.default.Router();
-const User_1 = __importDefault(require("../../entities/User"));
 const serverClient = stream_chat_1.StreamChat.getInstance(process.env.GET_STREAM_KEY, process.env.GET_STREAM_SECRET);
-router.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/chat-token', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
-    const { spotifyId, fName, lName, age, email, picture, city, state } = body;
+    const { id } = body;
     try {
-        const user = yield User_1.default.findOne({ where: { spotifyId } });
-        if (!user) {
-            yield User_1.default.create({
-                spotifyId,
-                name: `${fName} ${lName}`,
-                email,
-                age,
-                picture,
-                city,
-                state,
-            }).save();
-            const newUser = yield User_1.default.findOne({ where: { spotifyId } });
-            if (newUser) {
-                yield serverClient.upsertUser({
-                    id: newUser.uuid,
-                    spotifyId: newUser.spotifyId,
-                    name: `${fName} ${lName}`,
-                    email,
-                    picture,
-                });
-                res.json({ success: true }).status(200);
-            }
-            else {
-                res.json({ success: false, error: 'User not created' }).status(400);
-            }
+        const token = serverClient.createToken(id);
+        if (token) {
+            res.json({ success: true, token }).status(200);
         }
         else {
-            res.json({ success: false, error: 'User exists' }).status(204);
+            res.json({ success: false, error: 'Unable to create token' }).status(400);
         }
     }
     catch (e) {
@@ -56,5 +34,26 @@ router.post('/create', (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.json({ success: false, error: 'An error has occurred' }).status(400);
     }
 }));
+router.post('/import-users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let users = yield User_1.default.find();
+        let members = [];
+        for (var i = 0; i < users.length; i++) {
+            members.push({
+                id: users[i].uuid,
+                name: users[i].name,
+                picture: users[i].picture,
+                email: users[i].email,
+                spotifyId: users[i].spotifyId
+            });
+        }
+        yield serverClient.upsertUsers(members);
+        res.json({ success: true, message: 'Users created' }).status(200);
+    }
+    catch (e) {
+        console.log(e);
+        res.json({ success: false, error: 'An error has occurred' }).status(400);
+    }
+}));
 module.exports = router;
-//# sourceMappingURL=create.js.map
+//# sourceMappingURL=index.js.map

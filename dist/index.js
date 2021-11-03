@@ -20,6 +20,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const typeorm_1 = require("typeorm");
 const user = require('./routes/user');
 const music = require('./routes/music');
+const chat = require('./routes/chat');
 const middleware_1 = require("./utils/middleware");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
@@ -38,9 +39,9 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         else
             res.json({ success: false, error: 'User not logged in', type: 'accessToken' });
     });
-    app.use(validateUser);
     app.use('/api/v1/user', user);
     app.use('/api/v1/music', music);
+    app.use('/api/v1/chat', chat);
     app.use((_, res) => {
         res.status(404).json({ status: "404" });
     });

@@ -90,7 +90,6 @@ router.post('/add-friend', (req, res) => __awaiter(void 0, void 0, void 0, funct
                     const otherUser = yield User_1.default.findOne({ where: { spotifyId: userId }, relations: ['following', 'followers'] });
                     if (otherUser) {
                         if (otherUser.following.find(oUser => oUser.spotifyId === user.spotifyId)) {
-                            console.log('already following');
                             user.following.push(otherUser);
                             user.followers.push(otherUser);
                             user.save();
@@ -185,7 +184,6 @@ router.post('/remove-friend', (req, res) => __awaiter(void 0, void 0, void 0, fu
                 user.followers = user.followers.filter(follower => follower.uuid !== otherUser.uuid);
                 user.hasSkipped.push(otherUser);
                 user.save();
-                console.log(user);
                 res.json({ success: true }).status(200);
             }
             else {

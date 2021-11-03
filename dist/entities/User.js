@@ -64,6 +64,10 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "highlightedsongs", void 0);
 __decorate([
+    (0, typeorm_1.Column)('jsonb', { nullable: true, default: [] }),
+    __metadata("design:type", Array)
+], User.prototype, "chats", void 0);
+__decorate([
     (0, typeorm_1.ManyToMany)(() => User_1, user => user.beenSkippedBy),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)

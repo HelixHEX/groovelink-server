@@ -18,6 +18,11 @@ type song = {
     spotifyId: string;
 };
 
+type chat = {
+    chatid: string;
+    users: User[]
+}
+
 @Entity()
 export default class User extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
@@ -60,11 +65,13 @@ export default class User extends BaseEntity {
 
     @ManyToMany(() => User, user => user.followers)
     following: User[]
-
   
 
     @Column("jsonb", { nullable: true, default: [] })
     highlightedsongs: song[];
+
+    @Column('jsonb', {nullable: true, default: []})
+    chats: chat[];
 
     @ManyToMany(() => User, user => user.beenSkippedBy)
     @JoinTable()

@@ -27,7 +27,6 @@ router.post('/friends', (req, res) => __awaiter(void 0, void 0, void 0, function
                 if (exists)
                     friends.push(follower);
             });
-            console.log(friends.length);
             res.json({ success: true, friends }).status(200);
         }
         else {

@@ -99,7 +99,7 @@ router.post('/add-friend', async (req, res) => {
                     const otherUser = await User.findOne({ where: { spotifyId: userId }, relations: ['following', 'followers'] })
                     if (otherUser) {
                         if (otherUser.following.find(oUser => oUser.spotifyId === user.spotifyId)) {
-                            console.log('already following')
+                            // console.log('already following')
                             user.following.push(otherUser)
                             user.followers.push(otherUser)
                             user.save()
@@ -191,7 +191,7 @@ router.post('/remove-friend', async (req, res) => {
                 user.followers = user.followers.filter(follower => follower.uuid !== otherUser.uuid)
                 user.hasSkipped.push(otherUser)
                 user.save()
-                console.log(user)
+                // console.log(user)
                 res.json({success: true}).status(200)
             } else {
                 res.json({ success: false, error: 'Other user not found' }).status(400)

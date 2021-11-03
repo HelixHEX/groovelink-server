@@ -14,6 +14,7 @@ import { createConnection } from 'typeorm';
 //routes
 const user = require('./routes/user')
 const music = require('./routes/music')
+const chat = require('./routes/chat')
 import { checkAccess } from './utils/middleware'
 
 const main = async () => {
@@ -44,10 +45,11 @@ const main = async () => {
         else
             res.json({success: false, error: 'User not logged in', type: 'accessToken'})
     }
-    app.use(validateUser)
+    // app.use(validateUser)
 
     app.use('/api/v1/user', user)
     app.use('/api/v1/music', music)
+    app.use('/api/v1/chat', chat)
 
     app.use((_, res: express.Response) => {
         res.status(404).json({ status: "404" });

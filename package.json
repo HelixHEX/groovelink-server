@@ -25,6 +25,7 @@
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
     "spotify-web-api-node": "^5.0.2",
+    "stream-chat": "^4.3.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   }
